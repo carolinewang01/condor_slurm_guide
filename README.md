@@ -22,58 +22,112 @@ which explains how Condor works and provides more Condor features. This reposito
 5. To get more information about condor job 
 ```condor_q -g -better-analyze <job-id>```
 
-### 1. Basic Submission
-To submit any job to Condor, you will need:
-- An executable code file (for example, a .sh, .py, etc.)
-- A submit file (.sub)
-- Directories for output files and logs to live in.
+### Prerequisites
+Before starting any of the examples:
+1. Log into one of the dedicated Condor submit nodes: `darmok.cs.utexas.edu` or `jalad.cs.utexas.edu`
+2. Navigate to the appropriate example directory
+3. Ensure output and log directories exist (they should already be present for the examples/get created automatically)
 
-Example executable and submit files have been provided in the `condor/1.basic_submission/` directory.
-To run the example: 
+### Examples
 
-1. Log into one of the dedicated Condor submit nodes, `darmok.cs.utexas.edu` or `jalad.cs.utexas.edu`. 
-A description of the cluster servers is provided in the official UTCS documentation linked above. 
-2. Navigate to the folder where the executable code file and submit file live. In this tutorial, the directory is `condor/1.basic_submission/`
-3. Ensure that the ouput and log directories exist. For this tutorial, the necessary output and log directories should already exist.
-4. Run `condor_submit test_condor.sub` from the command line to submit the job.
-5. Monitor the job by running, `condor_q <username>`. A successful submission's status should either be "IDLE" (waiting to run), "RUN", or "DONE". If the submission is "HELD", then something has gone wrong with the submission.
-6. Check the error, log, and output files in `condor_logs/` for information about the job status, command line output, etc. 
+#### 1. Basic Shell Script Submission
+This example shows how to submit a simple shell script to Condor.
+Location: `condor/1.basic_submission/`
 
-### 2. Basic Python Submission
+1. Navigate to the example directory:
+```bash
+cd condor/1.basic_submission/
+```
 
-This example goes through how to manually submit a Python script to Condor. 
-The example is located at `condor/2.basic_python_submission`. 
+2. Submit the job:
+```bash
+condor_submit test_condor.sub
+```
 
-1. Log into one of the dedicated Condor submit nodes, `darmok.cs.utexas.edu` or `jalad.cs.utexas.edu`,
- and navigate to folders where the relevant examples files are located.
+3. Monitor the job:
+```bash
+condor_q <username>
+```
 
-2. Some manual formatting is necessary to submmit a Python script. Some of this formatting has already been done for you in the example, but is listed out below: 
-    - Add `#!/usr/bin/env python` to the top of the Python script being run, OR Add something analogous to  `#!/scratch/cluster/clw4542/rlzoo/bin/python` if using a conda env 
-    - Make the python script executable: `chmod +x basic_example.py`
+4. Check results in `condor_logs/` directory:
+- `.out` file: Contains the script's output
+- `.err` file: Contains any error messages
+- `.log` file: Contains Condor's execution log
 
-3. If your Python script requires command line arguments, ensure that the following line is contained in your submit script: 
-```arguments = --task baseline_rl --env_id Hopper-v2 --algo ppo2```
+#### 2. Basic Python Script Submission
+This example demonstrates submitting a Python script to Condor.
+Location: `condor/2.basic_python_submission/`
 
-4. Run `condor_submit test_condor.sub` from the command line to submit the job.
-5. Monitor the job by running, `condor_q <username>`. 
-6. Check the error, log, and output files in `condor_logs/` for information about the job status, command line output, etc. 
+1. Navigate to the example directory:
+```bash
+cd condor/2.basic_python_submission/
+```
 
-#### Troubleshooting: 
-- If you develop code from a Windows machine, you may need to ensure that the line endings in your Python script have Unix-style line endings (LF) encoding.
-- If you are having issues with imports being found, you may need to add the directory that the code is being run from to the pythonpath: 
-    `export PYTHONPATH=$PYTHONPATH:.`
+2. Make the Python script executable:
+```bash
+chmod +x hello_world.py
+```
 
-### 3.Submit via Python
+3. Submit the job:
+```bash
+condor_submit test_condor.sub
+```
 
-This example is located at `condor/3.submit_via_python/basic_example.py`.
-The main difference from the previous example is that this example shows how to submit a Condor job using a Python script. 
-1. Log into one of the dedicated Condor submit nodes, `darmok.cs.utexas.edu` or `jalad.cs.utexas.edu`,
- and navigate to folders where the relevant examples files are located.
- 2. Perform manual formatting to the submitted Python file, `condor/3.submit_via_python/basic_example.py`, as explained in the previous tutorial.
-3. Run example via `python condor_submit.py`.
-5. Monitor the job by running, `condor_q <username>`. 
-6. Once the job has completed, check the error, log, and output files at 
-`condor/3.submit_via_python/results/condor_logs`.
+4. Monitor and check results as described in Example 1.
+
+#### 3. Python-based Job Submission
+This example shows how to submit Condor jobs using Python code.
+Location: `condor/3.submit_via_python/`
+
+1. Navigate to the example directory:
+```bash
+cd condor/3.submit_via_python/
+```
+
+2. Run the example:
+```bash
+python condor_submit.py
+```
+
+This example demonstrates how to programmatically submit jobs using the `submit_to_condor` function, which handles:
+- Creating log directories
+- Generating Condor submit files
+- Submitting jobs to the cluster
+
+#### 4. GPU Job Submission
+This example demonstrates submitting a PyTorch job that uses GPU resources.
+Location: `condor/3.submit_via_python/`
+
+1. Navigate to the example directory:
+```bash
+cd condor/3.submit_via_python/
+```
+
+2. Make the GPU example script executable:
+```bash
+chmod +x gpu_example.py
+```
+
+3. Run the submission script:
+```bash
+python submit_gpu_example.py
+```
+
+The example demonstrates GPU usage by:
+- Checking CUDA availability and printing GPU information
+- Performing a large matrix multiplication operation on the GPU
+- Reporting timing and device information
+
+Note: Make sure you have PyTorch installed in your conda environment before running this example.
+
+### Troubleshooting
+- If you develop code from a Windows machine, ensure that your scripts have Unix-style line endings (LF) encoding
+- If you have issues with Python imports, add the code directory to your PYTHONPATH:
+    ```bash
+    export PYTHONPATH=$PYTHONPATH:.
+    ```
+- For Python scripts, always make them executable with `chmod +x` before submitting
+- Check the `.err` and `.log` files in `condor_logs/` for detailed error messages
 
 <!-- --------------------------------------- -->
 ## Slurm
