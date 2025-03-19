@@ -24,9 +24,9 @@ which explains how Condor works and provides more Condor features. This reposito
 
 ### 1. Basic Submission
 To submit any job to Condor, you will need:
-    - An executable code file (for example, a .sh, .py, etc.)
-    - A submit file (.sub)
-    - Directories for output files and logs to live in.
+- An executable code file (for example, a .sh, .py, etc.)
+- A submit file (.sub)
+- Directories for output files and logs to live in.
 
 Example executable and submit files have been provided in the `condor/1.basic_submission/` directory.
 To run the example: 
