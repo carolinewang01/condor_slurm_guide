@@ -1,0 +1,15 @@
+Executable = hello_world.py
+Universe = vanilla
+Getenv = true
+
++Group = "GRAD" 
++Project = "AI_ROBOTICS"
++ProjectDescription = "Example condor job."
+
+Input = /dev/null
+Error = condor_logs/basic_submit_$(CLUSTER).err
+Output = condor_logs/basic_submit_$(CLUSTER).out
+Log = condor_logs/basic_submit_$(CLUSTER).log
+
+Notification = Never
+Queue 1
